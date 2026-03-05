@@ -1,0 +1,67 @@
+services:
+  # API SERVICE
+  api:
+    build: .
+    container_name: student-api
+    image: nsahil992/student-api:${VERSION}
+    env_file:
+      - .env
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    ports:
+      - "8080:8080"
+    networks:
+      - student_api_net
+
+  # MIGRATION SERVICE
+  migrate:
+    container_name: student-api-migrate
+    image: postgres:16
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      PGPASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./src/main/resources/db/migration/V1__create_student_table.sql:/schema.sql:ro
+    entrypoint:
+      - sh
+      - -c
+      - |
+        echo "Waiting for DB..."
+        until pg_isready -h database -U ${DB_USERNAME}; do
+          sleep 2
+        done
+        echo "Running migrations..."
+        psql -h database -U ${DB_USERNAME} -d ${DB_NAME} -f /schema.sql
+        echo "Migration completed"
+    networks:
+      - student_api_net
+
+  # DATABASE SERVICE
+  database:
+    image: postgres:16
+    container_name: student-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "5443:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DB_USERNAME}" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    volumes:
+      - ./student-data:/var/lib/postgresql/data
+    networks:
+      - student_api_net
+
+networks:
+  student_api_net:
+
+volumes:
+  student-data:
