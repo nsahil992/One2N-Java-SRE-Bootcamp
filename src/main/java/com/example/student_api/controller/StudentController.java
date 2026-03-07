@@ -40,7 +40,7 @@ public class StudentController {
     // GET By id
     @GetMapping("/{id}")
     public ResponseEntity<Students> getStudentById(@PathVariable Long id) {
-        logger.info("Fetching student with id: {}");
+        logger.info("Fetching student with id: {}", id);
         return ResponseEntity.ok(studentService.getStudentById(id));
     }
 

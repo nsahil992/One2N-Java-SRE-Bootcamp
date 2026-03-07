@@ -20,6 +20,10 @@ package:
 test:
 	mvn test
 
+lint:
+	mvn checkstyle:check
+
+
 clean:
 	mvn clean
 

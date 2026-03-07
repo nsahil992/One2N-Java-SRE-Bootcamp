@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 @Getter
 @Setter
-@Service
 @Entity
 @Table(name = "students")
 @JsonPropertyOrder({"id", "name", "email", "age"})
