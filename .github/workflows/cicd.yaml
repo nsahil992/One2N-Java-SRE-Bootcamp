@@ -1,0 +1,56 @@
+name: Student API CI Pipeline
+
+on:
+  workflow_dispatch:
+
+  push:
+    branches:
+      - lvl04
+    paths:
+      - "src/**"
+      - "pom.xml"
+      - "Dockerfile"
+      - "Makefile"
+
+  pull_request:
+    branches:
+      - lvl04
+    paths:
+      - "src/**"
+      - "pom.xml"
+      - "Dockerfile"
+      - "Makefile"
+
+jobs:
+  ci:
+    name: Build, Test, Lint and Push Docker Image
+    runs-on: self-hosted
+
+    env:
+      VERSION: ${{ secrets.SEMVER_VERSION }}
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Build API
+        run: make build
+
+      - name: Run Tests
+        run: make test
+
+      - name: Lint Code
+        run: make lint
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+
+      - name: Docker Build, Test and Push
+        run: |
+          make docker-test
+          make docker-build VERSION=${{ env.VERSION }}
+          make docker-push VERSION=${{ env.VERSION }}
