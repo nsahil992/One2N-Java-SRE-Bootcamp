@@ -28,6 +28,8 @@ clean:
 	mvn clean
 
 # ----- DOCKER TARGETS -----
+docker-test:
+	hadolint Dockerfile
 
 docker-build:
 	docker build -t $(IMAGE) .
