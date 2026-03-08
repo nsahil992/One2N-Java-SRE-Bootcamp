@@ -6,15 +6,18 @@ on:
   push:
     branches:
       - lvl04
+      - lvl05
+      - master
     paths:
       - "src/**"
       - "pom.xml"
       - "Dockerfile"
       - "Makefile"
+      - "k8s/**"
 
   pull_request:
     branches:
-      - lvl04
+      - master
     paths:
       - "src/**"
       - "pom.xml"
