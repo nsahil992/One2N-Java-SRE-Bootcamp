@@ -18,12 +18,6 @@ public class StudentController {
 
     private final StudentService studentService;
 
-    // TEST Connection
-    @GetMapping("/healthcheck")
-    public ResponseEntity<String> healthcheck() {
-        return ResponseEntity.ok("UP");
-    }
-
     // CREATE Student
     @PostMapping
     public ResponseEntity<Students> createStudent(@RequestBody Students student) {

@@ -1,5 +1,6 @@
 package com.example.student_api;
 
+import com.example.student_api.controller.HealthController;
 import com.example.student_api.controller.StudentController;
 import com.example.student_api.entity.Students;
 import com.example.student_api.service.StudentService;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -23,12 +23,13 @@ import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(StudentController.class)
+@WebMvcTest({StudentController.class, HealthController.class})
 class StudentApiApplicationTests {
 
     @Autowired
     private MockMvc mockMvc;
 
+    @SuppressWarnings("removal")
     @MockBean
     private StudentService studentService;
 
@@ -100,7 +101,7 @@ class StudentApiApplicationTests {
     @Test
     void shouldReturnHealthcheck() throws Exception {
 
-        mockMvc.perform(get("/api/v1/students/healthcheck"))
+        mockMvc.perform(get("/api/v1/healthcheck"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("UP"));
     }
