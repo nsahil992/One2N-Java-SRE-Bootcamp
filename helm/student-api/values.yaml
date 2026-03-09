@@ -1,0 +1,22 @@
+namespaceOverride: ""
+api:
+  image: nsahil992/student-api
+  tag: "2.0.0"
+  pullPolicy: IfNotPresent
+  replicas: 1
+  port: 8080
+  config:
+    DB_HOST: student-db-service
+    DB_PORT: "5432"
+
+db:
+  image: postgres:16
+  replicas: 1
+  port: 5432
+  config:
+    POSTGRES_DB: studentdb
+    POSTGRES_PORT: "5432"
+  persistence:
+    storage: 1Gi
+    storageClassName: manual
+    path: /Users/Sahil/Desktop/student-api/student-data
