@@ -9,10 +9,12 @@ spec:
   selector:
     matchLabels:
       app: student-api
+
   template:
     metadata:
       labels:
         app: student-api
+
     spec:
 
       initContainers:
@@ -27,6 +29,7 @@ spec:
                 sleep 2
               done
               echo "Database ready"
+
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -58,19 +61,23 @@ spec:
                   name: student-api-secret
                   key: POSTGRES_PASSWORD
 
-          livenessProbe:
-            httpGet:
-              path: /api/v1/healthcheck
-              port: {{ .Values.api.port }}
-            initialDelaySeconds: 90
-            periodSeconds: 15
-
           readinessProbe:
             httpGet:
               path: /api/v1/healthcheck
               port: {{ .Values.api.port }}
-            initialDelaySeconds: 45
+            initialDelaySeconds: 60
             periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+
+          livenessProbe:
+            httpGet:
+              path: /api/v1/healthcheck
+              port: {{ .Values.api.port }}
+            initialDelaySeconds: 120
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 5
 
 ---
 
