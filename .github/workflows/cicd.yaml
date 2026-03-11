@@ -65,19 +65,22 @@ jobs:
     runs-on: self-hosted
 
     steps:
-
       - name: Checkout Repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Update Helm Image Tag
         run: |
           sed -i '' "s/tag:.*/tag: \"${VERSION}\"/" helm/student-api/values.yaml
 
       - name: Commit Updated Helm Values
+        if: github.event_name == 'push'
         run: |
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
 
           git add helm/student-api/values.yaml
           git commit -m "ci: update image tag to ${VERSION}" || echo "No changes"
-          git push
+
+          git push origin HEAD:${GITHUB_REF_NAME}
