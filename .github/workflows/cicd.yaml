@@ -3,6 +3,9 @@ name: Student API CI/CD Pipeline
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
   push:
     branches:
       - lvl04
