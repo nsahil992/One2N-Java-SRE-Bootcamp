@@ -1,7 +1,7 @@
 namespaceOverride: ""
 api:
   image: nsahil992/student-api
-  tag: "2.0.0"
+  tag: "2.0.1"
   pullPolicy: IfNotPresent
   replicas: 1
   port: 8080
