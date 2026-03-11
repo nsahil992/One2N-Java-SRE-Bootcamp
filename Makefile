@@ -1,7 +1,7 @@
 .PHONY: build run test clean package docker-build docker-run docker-push
 
 APP_NAME = student-api
-VERSION ?= 2.0.0
+VERSION ?= 2.0.1
 
 DOCKER_USERNAME ?= nsahil992
 IMAGE = $(DOCKER_USERNAME)/$(APP_NAME):$(VERSION)
