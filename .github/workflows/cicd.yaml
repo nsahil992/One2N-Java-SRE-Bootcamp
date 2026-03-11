@@ -71,7 +71,7 @@ jobs:
 
       - name: Update Helm Image Tag
         run: |
-          sed -i "s/tag:.*/tag: \"${VERSION}\"/" helm/student-api/values.yaml
+          sed -i '' "s/tag:.*/tag: \"${VERSION}\"/" helm/student-api/values.yaml
 
       - name: Commit Updated Helm Values
         run: |
