@@ -1,4 +1,4 @@
-name: Student API CI Pipeline
+name: Student API CI/CD Pipeline
 
 on:
   workflow_dispatch:
@@ -13,7 +13,7 @@ on:
       - "pom.xml"
       - "Dockerfile"
       - "Makefile"
-      - "k8s/**"
+      - "helm/**"
 
   pull_request:
     branches:
@@ -24,13 +24,14 @@ on:
       - "Dockerfile"
       - "Makefile"
 
+env:
+  VERSION: ${{ secrets.SEMVER_VERSION }}
+
 jobs:
+
   ci:
     name: Build, Test, Lint and Push Docker Image
     runs-on: self-hosted
-
-    env:
-      VERSION: ${{ secrets.SEMVER_VERSION }}
 
     steps:
 
@@ -52,8 +53,31 @@ jobs:
           username: ${{ vars.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Docker Build, Test and Push
+      - name: Docker Build and Push
         run: |
           make docker-test
-          make docker-build VERSION=${{ env.VERSION }}
-          make docker-push VERSION=${{ env.VERSION }}
+          make docker-build VERSION=${VERSION}
+          make docker-push VERSION=${VERSION}
+
+  cd:
+    name: Update Helm Values for GitOps
+    needs: ci
+    runs-on: self-hosted
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Update Helm Image Tag
+        run: |
+          sed -i "s/tag:.*/tag: \"${VERSION}\"/" helm/student-api/values.yaml
+
+      - name: Commit Updated Helm Values
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+
+          git add helm/student-api/values.yaml
+          git commit -m "ci: update image tag to ${VERSION}" || echo "No changes"
+          git push
