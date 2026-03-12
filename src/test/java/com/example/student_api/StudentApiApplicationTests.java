@@ -103,6 +103,6 @@ class StudentApiApplicationTests {
 
         mockMvc.perform(get("/api/v1/healthcheck"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("UP"));
+                .andExpect(content().string("UP - Student API service is operational"));
     }
 }
