@@ -1,4 +1,4 @@
-# Student API – Spring Boot + PostgreSQL + Docker + Kubernetes + Helm
+# Student API – CI/CD, K8s & Monitoring
 
 A production-style **Student CRUD REST API** built using **Java, Spring Boot, Spring Data JPA, and PostgreSQL**.
 
@@ -474,14 +474,129 @@ helm uninstall student-api -n student-api
 
 ---
 
+# GitOps Deployment using ArgoCD
+
+We use **ArgoCD** to implement **GitOps-based deployment**.
+
+ArgoCD continuously monitors the GitHub repository and ensures the Kubernetes cluster state matches the desired state defined in Helm charts.
+
+---
+
+## ArgoCD Application Overview
+
+![ArgoCD Dashboard](./images/argocd-1.png)
+
+![ArgoCD Resource Tree](./images/argocd-2.png)
+
+### Features
+
+- Automatic synchronization with GitHub
+- Self-healing (restores deleted resources)
+- Declarative deployment using Helm charts
+- Visual representation of Kubernetes resources
+
+---
+
+## Application Details
+
+- **Repository:** GitHub (Helm charts as source of truth)
+- **Path:** `helm/student-api`
+- **Namespace:** `student-api`
+- **Sync Policy:** Auto Sync Enabled
+
+---
+
+# Monitoring using Prometheus
+
+We use **Prometheus** for collecting and querying metrics from:
+
+- Spring Boot Application
+- Kubernetes cluster
+- PostgreSQL database
+
+---
+
+## Prometheus Metrics
+
+![Prometheus Metrics](./images/prom-img.png)
+
+### Example Query
+
+```promql
+http_server_requests_seconds_count
+```
+
+---
+
+# Visualization using Grafana
+
+We use **Grafana** to visualize metrics collected by Prometheus and gain real-time insights into the system.
+
+Grafana helps in monitoring:
+
+- Application performance
+- Infrastructure health
+- Database behavior
+
+---
+
+## 1. Application Dashboard
+
+![Grafana API Dashboard](./images/student-api-1.png)
+
+![Grafana API Metrics](./images/student-api-2.png)
+
+### Panels Included
+
+- **Application Uptime** → Total running time of the application
+- **CPU Usage** → CPU consumption of the application pod
+- **API Latency** → Response time of API requests
+- **JVM Memory Usage** → Heap and non-heap memory usage
+- **Request Rate** → Number of API requests per second
+- **Pod Metrics** → CPU and memory usage of application pods
+
+---
+
+## 2. Infrastructure Metrics
+
+This section focuses on Kubernetes-level monitoring.
+
+### Panels Included
+
+- **Pod CPU Usage** → CPU usage across pods
+- **Pod Memory Usage** → Memory usage across pods
+- **Request Trends** → Traffic patterns over time
+
+---
+
+## 3. Database Dashboard
+
+![Grafana DB Dashboard](./images/student-api-db.png)
+
+### Panels Included
+
+- **DB Health (`pg_up`)** → Shows if database is up (1) or down (0)
+- **Database Size** → Total storage used by the database
+- **Active Connections** → Number of active DB connections
+- **Successful Queries** → Number of successful DB operations
+- **Failed Queries** → Number of failed DB operations
+
+---
+
+## Key Metrics Used
+
+### Request Rate
+
+```promql
+rate(http_server_requests_seconds_count[1m])
+```
+
+---
 # Future Improvements
 
 Planned improvements include:
 
-- ArgoCD GitOps deployment
-- Prometheus monitoring
-- Grafana dashboards
-- Observability improvements
+- Observability improvements with alerts
 
 ---
 
