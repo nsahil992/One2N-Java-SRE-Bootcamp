@@ -43,6 +43,9 @@ This project demonstrates:
 - GitHub Actions CI pipeline
 - Kubernetes deployment
 - Helm chart packaging
+- ArgoCD CD pipeline
+- Prometheus metrics scraping
+- Grafana metrics visualization
 
 ---
 
@@ -90,7 +93,11 @@ GitHub Actions CI/CD
       │
 Kubernetes
       │
-Helm
+Helm Chart
+      │
+ArgoCD deployment
+      │
+Prometheus & Grafana
 ```
 
 ---
